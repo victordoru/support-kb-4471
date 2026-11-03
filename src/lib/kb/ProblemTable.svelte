@@ -5,8 +5,8 @@
   import { tenantOf } from '#lib/kb/locales';
   import { problemsIn, type Problem } from '#lib/kb/problems';
 
-  // issues: problem → { n: issue number, href: link }
-  let { ticket, issues = {} }: { ticket: number; issues?: Partial<Record<Problem, { n: number; href: string }>> } = $props();
+  // issues: problem → { n: issue number, href: link, state: what happened to it }
+  let { ticket, issues = {} }: { ticket: number; issues?: Partial<Record<Problem, { n: number; href: string; state?: string }>> } = $props();
 
   const WHAT: Record<Problem, string> = {
     parser: 'Day-first tenant, any way in except a booking-v3 form: the shared parser reads the date month first. Day and month swap.',
@@ -19,7 +19,7 @@
 </script>
 
 <p class="sum">
-  <strong>{result.merged.length}</strong> reports in #{ticket} ·
+  <strong>{result.merged.length}</strong> reports in #{ticket}, each counted where the desk files it ·
   <strong>{result.groups.length}</strong> {result.groups.length === 1 ? 'problem' : 'problems'}
 </p>
 
@@ -29,11 +29,11 @@
     {#each result.groups as g (g.problem)}
       <tr>
         <td><code>{g.problem}</code><br /><span class="what">{WHAT[g.problem]}</span></td>
-        <td>{g.reports.length}</td>
+        <td>{g.reports.length}{#if g.filedUnder.length}<br /><span class="what">also counted under {g.filedUnder.join(', ')}</span>{/if}</td>
         <td>{g.tenants}</td>
         <td>{g.firstSeen} → {g.lastSeen}</td>
         <td>
-          {#if issues[g.problem]}<a href={issues[g.problem]?.href}>#{issues[g.problem]?.n}</a>{:else}<span class="none">none yet</span>{/if}
+          {#if issues[g.problem]}<a href={issues[g.problem]?.href}>#{issues[g.problem]?.n}</a>{#if issues[g.problem]?.state}<br /><span class="what">{issues[g.problem]?.state}</span>{/if}{:else}<span class="none">none yet</span>{/if}
         </td>
       </tr>
     {/each}

@@ -2,9 +2,9 @@
 layout: runbook
 title: '#4471 split · three problems, not one'
 owner: support desk
-status: open
+status: closed
 reviewed: 2026-11-03
-signature: victordr
+signature: 'v1.eyJzdWIiOiIxMTU0MSIsImF1ZCI6ImNoYWxsZW5nZTp3aGF0LWl0LXNob3dzIiwiaWF0IjoxNzkzNzA1NjgzLCJleHAiOjE3OTM3OTIwODN9.ykO2zoDf2G6OpQafVwcNqS6q0Px6T5H_dkTN4dc-jak'
 ---
 
 <script>
@@ -15,17 +15,18 @@ signature: victordr
 
   const repo = 'https://github.com/victordoru/support-kb-4471/issues';
   const issues = {
-    parser: { n: 1, href: `${repo}/1` },
-    hint: { n: 2, href: `${repo}/2` },
-    'one-day': { n: 3, href: `${repo}/3` },
+    parser: { n: 1, href: `${repo}/1`, state: 'closed · fixed' },
+    hint: { n: 2, href: `${repo}/2`, state: "closed · won't fix" },
+    'one-day': { n: 3, href: `${repo}/3`, state: 'closed with #4471' },
   };
 </script>
 
 [#4471](/kb/incidents/4471) was merged as one issue and marked known: "one issue, one fix queued".
-The reports in it describe three different problems. The queued parser fix closes only one of them.
+The reports in it describe more than one problem. Each has its own ticket.
 
-<Callout kind="warn">
-#4471 is not one bug. Each problem below has its own ticket now. Do not close the other two when the parser fix ships.
+<Callout>
+Engineering closed #4471 on 05 Oct. <code>parser</code>: fixed (<code>fix(dates): parse dd/mm for eu locales</code>).
+<code>hint</code>: won't fix, the booking-v3 form is retired. The tickets below are closed to match.
 </Callout>
 
 ## What #4471 holds
@@ -47,11 +48,10 @@ The reports in it describe three different problems. The queued parser fix close
 
 <CauseTable ticket={4471} />
 
-## What to do
+## What to do next time
 
-- Ship the parser fix and close the `parser` ticket only.
-- Fix the booking-v3 date hint separately. The parser fix does not touch it.
-- Look for a time-zone or day-boundary bug for the one-day reports.
+- One fix per problem: the parser fix did not touch the booking-v3 hint. Retiring the form did.
+- If one-day reports come back after the parser fix, open a new ticket: a time-zone or day-boundary bug.
 - Match duplicates on cause (tenant and way in), not on subject.
 
 <RenderStamp {signature} />
