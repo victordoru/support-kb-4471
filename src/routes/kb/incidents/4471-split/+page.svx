@@ -1,0 +1,57 @@
+---
+layout: runbook
+title: '#4471 split · three problems, not one'
+owner: support desk
+status: open
+reviewed: 2026-11-03
+signature: victordr
+---
+
+<script>
+  import ProblemTable from '#lib/kb/ProblemTable.svelte';
+  import CauseTable from '#lib/kb/CauseTable.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+
+  const repo = 'https://github.com/victordoru/support-kb-4471/issues';
+  const issues = {
+    parser: { n: 1, href: `${repo}/1` },
+    hint: { n: 2, href: `${repo}/2` },
+    'one-day': { n: 3, href: `${repo}/3` },
+  };
+</script>
+
+[#4471](/kb/incidents/4471) was merged as one issue and marked known: "one issue, one fix queued".
+The reports in it describe three different problems. The queued parser fix closes only one of them.
+
+<Callout kind="warn">
+#4471 is not one bug. Each problem below has its own ticket now. Do not close the other two when the parser fix ships.
+</Callout>
+
+## What #4471 holds
+
+<ProblemTable ticket={4471} {issues} />
+
+## Why the merge hid them
+
+- **Merged on subject.** [Decision 0001](/kb/decisions/0001-dedupe-by-subject) merges reports whose
+  subjects match, and nobody reads the body. "Wrong date" fits all three problems.
+- **The cause depends on the tenant, not the browser.** Intake tags each report from the reporter's
+  browser. Whether a report is `parser` or `hint` depends on the tenant's locale and booking form.
+  Intake and the tenant disagree on many of these reports.
+- **A report that is not a swap still counted as one.** The desk read some reports as a one-day move,
+  then filed them under `parser` by tenant. They have their own cause.
+- **The export repeats rows.** The ticket export has overlapping pages. Count each report id once.
+
+## The #4471 view, for comparison
+
+<CauseTable ticket={4471} />
+
+## What to do
+
+- Ship the parser fix and close the `parser` ticket only.
+- Fix the booking-v3 date hint separately. The parser fix does not touch it.
+- Look for a time-zone or day-boundary bug for the one-day reports.
+- Match duplicates on cause (tenant and way in), not on subject.
+
+<RenderStamp {signature} />
